@@ -1,7 +1,0 @@
-install pytorch:
-https://pytorch.org/get-started/locally/
-install other packages:
-yfinance
-sklearn
-transformers
-tqdm

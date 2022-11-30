@@ -117,14 +117,17 @@ def run_stock_ticker(stock_name: str):
     # Paths
     train_path = "data/{0}_train.csv".format(stock_name)
     test_path = "data/{0}_test.csv".format(stock_name)
+    val_path = "data/{0}_val.csv".format(stock_name)
 
     # Create Datasets
     train_dataset = FinancialDataset(train_path)
+    val_dataset = FinancialDataset(val_path)
     test_dataset = FinancialDataset(test_path)
     test_dataset.renormalize(train_dataset.mean, train_dataset.stdev)
-
+    
     # Create Dataloaders
     train_loader = DataLoader(dataset=train_dataset)
+    val_loader = DataLoader(dataset=val_dataset)
     test_loader = DataLoader(dataset=test_dataset)
 
     # Train model
