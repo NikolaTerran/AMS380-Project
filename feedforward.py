@@ -72,6 +72,7 @@ def run_model(
     num_epochs=1,
 ):
     if not train:
+        # Only run once for tests
         num_epochs = 1
     for epoch in range(num_epochs):
         total_loss = 0
@@ -79,23 +80,28 @@ def run_model(
         results = []
         outputs = []
 
+        # Iterate through dataset and train the model
         for i, (item, result) in enumerate(loader):
             output = model(item.to(torch.float32)).to(torch.float32)
-            result = torch.unsqueeze(result.to(torch.float32), 0)
+            # Need to make the dimensions the same as the input
+            result = torch.unsqueeze(result.to(torch.float32), 0) 
 
             if epoch == num_epochs - 1:
+                # Append results at the last epoch
                 indexes.append(i)
                 results.append(result.item())
                 outputs.append(output.item())
 
             loss = criterion(output, result)
             if train:
+                # Only run the optimizer/loss steps during training
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
             total_loss = torch.add(total_loss, loss.data)
 
         if epoch == num_epochs - 1:
+            # Plot the training data
             plt.scatter(indexes, outputs, s=1)
         print(epoch, total_loss)
 
@@ -117,17 +123,14 @@ def run_stock_ticker(stock_name: str):
     # Paths
     train_path = "data/{0}_train.csv".format(stock_name)
     test_path = "data/{0}_test.csv".format(stock_name)
-    val_path = "data/{0}_val.csv".format(stock_name)
 
     # Create Datasets
     train_dataset = FinancialDataset(train_path)
-    val_dataset = FinancialDataset(val_path)
     test_dataset = FinancialDataset(test_path)
     test_dataset.renormalize(train_dataset.mean, train_dataset.stdev)
     
     # Create Dataloaders
     train_loader = DataLoader(dataset=train_dataset)
-    val_loader = DataLoader(dataset=val_dataset)
     test_loader = DataLoader(dataset=test_dataset)
 
     # Train model
@@ -141,7 +144,7 @@ def run_stock_ticker(stock_name: str):
         num_epochs=num_epochs,
     )
 
-    # Run on validation data
+    # Run on test data
     with torch.no_grad():
         run_model(
             test_loader,
