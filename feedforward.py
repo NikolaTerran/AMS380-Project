@@ -54,12 +54,22 @@ class FinancialDataset(Dataset):
 
 
 class FeedForwardNN(nn.Module):
+    """
+    Feedforward neural network. General structured based off
+    https://pytorch.org/tutorials/recipes/recipes/defining_a_neural_network.html
+    """
     def __init__(self, input_size, hidden_size, output_size):
+        """
+        Defines our layers
+        """
         super(FeedForwardNN, self).__init__()
         self.fc1 = nn.LSTM(input_size, hidden_size, num_layers=3) # LSTM layer
         self.fc2 = nn.Linear(hidden_size, output_size) # Linear layer after
 
     def forward(self, x):
+        """
+        Method called during model evaluation that runs the layers
+        """
         out, (hn, cn) = self.fc1(x)
         out = self.fc2(out)
         return out
@@ -73,7 +83,6 @@ def run_model(
     name: str,
     train=False,
     num_epochs=1,
-    plot_start=0,
 ):
     if not train:
         # Only run once for tests
@@ -99,8 +108,8 @@ def run_model(
             loss = criterion(output, result)
             if train:
                 # Only run the optimizer/loss steps during training
-                optimizer.zero_grad()
-                loss.backward()
+                optimizer.zero_grad() # Zero the gradients before updating
+                loss.backward() 
                 optimizer.step()
             total_loss = torch.add(total_loss, loss.data)
 
@@ -109,6 +118,7 @@ def run_model(
             plt.scatter(indexes, outputs, s=1, label="Predicted")
         print(epoch, total_loss)
 
+    # Plots
     dataset = loader.dataset
     plt.text(10, np.min(dataset.close + 1), "Loss = {0:.2f}".format(total_loss))
     plt.scatter(dataset.index, dataset.close, label="True value", s=1)
