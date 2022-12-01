@@ -70,6 +70,7 @@ def run_model(
     name: str,
     train=False,
     num_epochs=1,
+    plot_start=0,
 ):
     if not train:
         # Only run once for tests
@@ -102,13 +103,15 @@ def run_model(
 
         if epoch == num_epochs - 1:
             # Plot the training data
-            plt.scatter(indexes, outputs, s=1)
+            plt.scatter(indexes, outputs, s=1, label="Predicted")
         print(epoch, total_loss)
 
     dataset = loader.dataset
-    plt.scatter(dataset.index, dataset.close, label="Expected", s=1)
-    plt.title(name)
+    plt.text(10, np.min(dataset.close + 1), "Loss = {0:.2f}".format(total_loss))
+    plt.scatter(dataset.index, dataset.close, label="True value", s=1)
+    plt.title("{0} {1}".format(name, "train" if train else "test"))
     plt.legend()
+    plt.tight_layout()
 
     save_path = "plots/{0}_{1}.png".format(name, "train" if train else "test")
     plt.savefig(save_path)
