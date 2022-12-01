@@ -42,10 +42,13 @@ class FinancialDataset(Dataset):
 
     def __getitem__(self, index):
         """
-        Given an index, return the corresponding element.
+        Given an index, return the corresponding element in the 
+        tuple (input_value, expected_value)
         """
+        # interval is [index, index + size), so it will not return index + input_size
+        # for the input, and the expected result will be at index + input_size
         return (
-            self.close[index : index + input_size],
+            self.close[index : index + input_size], 
             self.close[index + input_size],
         )
 
