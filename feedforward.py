@@ -1,3 +1,9 @@
+# Group 1: Neural Networks and Asset Price Prediction
+# Antonio Frigo, 112747350
+# Justin Willson, 112649988
+# Jeffrey Zheng, 113821367
+# Tianrun Liu, 112838591
+
 import torch
 from torch.utils.data import DataLoader, Dataset
 import torch.nn as nn
@@ -87,6 +93,9 @@ def run_model(
     if not train:
         # Only run once for tests
         num_epochs = 1
+    
+    # Structure inspired by
+    # https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
     for epoch in range(num_epochs):
         total_loss = 0
         indexes = []

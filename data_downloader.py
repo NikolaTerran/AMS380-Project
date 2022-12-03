@@ -1,3 +1,9 @@
+# Group 1: Neural Networks and Asset Price Prediction
+# Antonio Frigo, 112747350
+# Justin Willson, 112649988
+# Jeffrey Zheng, 113821367
+# Tianrun Liu, 112838591
+
 import yfinance as yf
 
 DATA_DIR = "data"
